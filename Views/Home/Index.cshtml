@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BlogProject.Models.Post>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
+    var currentUserId = UserManager.GetUserId(User);
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-4">Blog'a Hoş Geldiniz</h1>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Posts" asp-action="Create" class="btn btn-primary">Yeni Post Oluştur</a>
+    }
+    else
+    {
+        <p class="text-muted">Post oluşturmak, düzenlemek veya silmek için giriş yapmalısınız.</p>
+    }
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        @foreach (var post in Model)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <p class="card-text fs-5">@post.Content</p>
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                    <small>Yazar: @post.User.UserName | @post.CreatedAt.ToString("g")</small>
+                    
+                    @* Sadece post sahibi butonları görebilir *@
+                    @if (post.UserId == currentUserId)
+                    {
+                        <div>
+                            <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-warning">Düzenle</a>
+                            <form asp-controller="Posts" asp-action="Delete" asp-route-id="@post.Id" method="post" class="d-inline" onsubmit="return confirm('Silmek istediğine emin misin?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        
+        @if(!Model.Any())
+        {
+            <p class="text-center">Henüz post eklenmemiş.</p>
+        }
+    </div>
+</div>

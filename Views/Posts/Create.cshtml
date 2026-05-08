@@ -1,0 +1,15 @@
+@model BlogProject.Models.Post
+
+    <div class="row justify-content-center">
+    <div class="col-md-8">
+    <h2>Yeni Post Oluştur</h2>
+    <form asp-action="Create" method="post">
+    <div class="form-group mb-3">
+    <textarea asp-for="Content" class="form-control" rows="5" placeholder="Ne düşünüyorsunuz?"></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Paylaş</button>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+    </div>
+    </div>
